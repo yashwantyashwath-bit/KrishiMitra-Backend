@@ -11,22 +11,41 @@ app.get("/", (req, res) => {
 });
 
 // crop suggestion API
-app.post("/crop-suggestion", (req, res) => {
-  const { soil, season, language } = req.body;
-
-  const suggestions = {
-    en: "Rice is suitable for your soil and season.",
-    te: "మీ నేల మరియు కాలానికి వరి అనుకూలంగా ఉంటుంది.",
-    kn: "ನಿಮ್ಮ ಮಣ್ಣು ಮತ್ತು ಹಂಗಾಮಿಗೆ ಭತ್ತ ಸೂಕ್ತವಾಗಿದೆ.",
-    hi: "आपकी मिट्टी और मौसम के लिए धान उपयुक्त है।"
-  };
+app.post("/api/farming/suggest", (req, res) => {
+  const { soilType, ph, organicMatter, lat, lon } = req.body;
 
   res.json({
-    success: true,
-    suggestion: suggestions[language] || suggestions.en
+    primaryOption: {
+      category: "Agriculture",
+      recommendedCrops: [
+        {
+          crop: "Rice",
+          score: 85,
+          reason: "Suitable for loamy soil and adequate water availability"
+        },
+        {
+          crop: "Maize",
+          score: 75,
+          reason: "Moderate rainfall and good market demand"
+        }
+      ]
+    },
+    secondaryOptions: [
+      {
+        name: "Dairy Farming",
+        reason: "Regular income and manure support"
+      }
+    ],
+    loanSchemes: [
+      {
+        schemeName: "PMFBY",
+        purpose: "Crop insurance for farmers"
+      }
+    ]
   });
 });
 
+// 🔴 THIS PART WAS MISSING
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
